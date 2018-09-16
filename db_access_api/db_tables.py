@@ -1,7 +1,10 @@
 import psycopg2
 
+dbname="sep-user"
+user="sep-user"
+
 def read():
-    conn = psycopg2.connect("dbname=sep-user user=sep-user")
+    conn = psycopg2.connect("dbname="+dbname+" user="+user)
     cur = conn.cursor()
 
     cur.execute("select table_name from information_schema.tables where table_schema = 'public';")
@@ -15,7 +18,7 @@ def read():
 
 
 def singleTable(nombre):
-    conn = psycopg2.connect("dbname=sep-user user=sep-user")
+    conn = psycopg2.connect("dbname="+dbname+" user="+user)
     cur = conn.cursor()
 
     cur.execute("select column_name,data_type from information_schema.columns where table_name = '"+nombre+"';")
@@ -46,7 +49,7 @@ def create_dictionary(keys_list, values_list):
     return ret_dict
 
 def columnsTable(nombre):
-    conn = psycopg2.connect("dbname=sep-user user=sep-user")
+    conn = psycopg2.connect("dbname="+dbname+" user="+user)
     cur = conn.cursor()
     
     cur.execute("select column_name,data_type from information_schema.columns where table_name = '"+nombre+"';")
@@ -59,7 +62,7 @@ def columnsTable(nombre):
     return [ c[0] for c in col_list]
 
 def queryTables(cuerpo):
-    conn = psycopg2.connect("dbname=sep-user user=sep-user")
+    conn = psycopg2.connect("dbname="+dbname+" user="+user)
     cur = conn.cursor()
     
     cur.execute(cuerpo.get('query'))
