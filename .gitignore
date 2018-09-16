@@ -1,9 +1,0 @@
-bin/
-include/
-lib/
-local/
-myAPP/
-myAPP2/
-myAPP3/
-pip-selfcheck.json
-*.pyc
