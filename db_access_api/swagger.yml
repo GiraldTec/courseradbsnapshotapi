@@ -1,0 +1,87 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /coursera/dbtables/query:
+    post:
+      parameters:
+        - name: cuerpo
+          in: body
+          description: "query to be executed"
+          required: true
+          schema:          
+            type: object
+            properties:
+                query:
+                  type: string
+      operationId: "db_tables.queryTables"
+      tags:
+        - "Query to be executed"
+      summary: "Query to be executed"
+      responses:
+        200:
+          description: "String of the query"
+          schema:
+            type: "object"
+  /coursera/dbtables:
+    get:
+      operationId: "db_tables.read"
+      tags:
+        - "tables from db"
+      summary: "List of tables from db"
+      responses:
+        200:
+          description: "Successful db access"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+  /coursera/dbtable/{nombre}:
+    get:
+      parameters:
+        - name: "nombre"
+          in: "path"
+          description: "Name of the table"
+          required: true
+          type: "string"
+      operationId: "db_tables.singleTable"
+      tags:
+        - "A tables from db"
+      summary: "List of tables from db"
+      responses:
+        200:
+          description: "Successful db access"
+          schema:
+            type: "array"
+            items:
+              type: "object"
+  /coursera/dbtable/{nombre}/columns:
+    get:
+      parameters:
+        - name: "nombre"
+          in: "path"
+          description: "Name of the table"
+          required: true
+          type: "string"
+      operationId: "db_tables.columnsTable"
+      tags:
+        - "A tables from db"
+      summary: "List of tables from db"
+      responses:
+        200:
+          description: "Successful db access"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+

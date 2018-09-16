@@ -2,5 +2,8 @@ bin/
 include/
 lib/
 local/
+myAPP1/
+myAPP2/
+myAPP3/
 pip-selfcheck.json
-*/*.pyc
+*.pyc
