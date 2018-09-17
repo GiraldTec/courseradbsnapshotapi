@@ -25,7 +25,7 @@ To run the server and providing the API run the ***db_access_server.py*** script
 
 # API methods
 
-- ***/api/coursera/db_tables***
-- ***/api/coursera/db_table/{*** name ***}***
-- ***/api/coursera/db_table/{*** name ***}/columns***
-- ***/api/coursera/query***
+- GET: ***/api/coursera/db_tables***
+- GET: ***/api/coursera/db_table/{*** name ***}***
+- GET: ***/api/coursera/db_table/{*** name ***}/columns***
+- POST: ***/api/coursera/query***
