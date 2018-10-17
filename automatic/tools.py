@@ -42,8 +42,9 @@ def get_table_request(today_requests, tab_req):
 
 
 def get_clickstream_request(today_requests, click_req):
+	print "ENTERING METHOD: get_clickstream_request"
 	if today_requests==[]:
-		return []
+		return None
 	else:
 		for r in today_requests:
 			if r.to_json()['exportType'] == click_req.to_json()['exportType'] and r.to_json()['anonymityLevel'] == click_req.to_json()['anonymityLevel'] and sorted(r.to_json()['scope'].items()) == sorted(click_req.to_json()['scope'].items()) and sorted(r.to_json()['interval'].items()) == sorted(click_req.to_json()['interval'].items()):
@@ -53,8 +54,9 @@ def get_clickstream_request(today_requests, click_req):
 		return None
 
 def get_today_requests():
+	print "ENTERING METHOD: get_today_requests"
 	all_requests = api.get_all()
-
+	print all_requests
 	today_requests = []
 	today_is = date.today()
 	for single_request in all_requests:
@@ -73,8 +75,9 @@ def get_from_todays(tab_req, click_req):
 	return_clickstream_req = get_clickstream_request(today_requests, click_req)	
 
 	return return_tab_req, return_clickstream_req
-
+'''
 def get_latest_table_request():
+	print "ENTERING METHOD: get_latest_table_request"
 	today_requests = get_today_requests()
 	latest = None
 	for r in today_requests:
@@ -82,11 +85,12 @@ def get_latest_table_request():
 			latest = r
 			break
 	return latest
+'''
 
 def issue_requests(config_json):
 
 	range_first = config_json["fist_clickstream_date"] if config_json["first_time"]=="yes" else config_json["last_clickstream_date"]
-	range_last = str(date.today() - timedelta(days=1))
+	range_last = str(date.today() - timedelta(days=1)) if datetime.today().hour > 3 else str(date.today() - timedelta(days=2))
 
 	print (range_first, range_last)
 
@@ -108,10 +112,11 @@ def issue_requests(config_json):
 			# try to get the table request
 			# table_request_id
 			if registered_tables_request==None:
+				print 'TIME TO REQUEST TABLES'
 				tables_response = api.post(TABLES_ISSUE_REQUEST)
-				print 'THIS IS THE RESPONSE OF THE POST' + str(tables_response[0])
-				registered_tables_request = api.get(tables_response[0].to_json()["id"])
-				print 'THIS IS THE REGISTERED REQUEST ' + str(registered_tables_request[0])
+				print 'THIS IS THE RESPONSE OF THE TABLE-POST' + str(tables_response[0])
+				registered_tables_request = api.get(tables_response[0].to_json()["id"])[0]
+				print 'THIS IS THE REGISTERED TABLE-REQUEST ' + str(registered_tables_request)
 
 		except Exception as e:
 			print 'THIS IS THE MESSAGE: '
@@ -133,17 +138,19 @@ def issue_requests(config_json):
 		try:
 			# try to get the clickstream request
 			if registered_clickstream_request==None:
-				print 'ABOUT TO REQUEST'
+				print 'ABOUT TO REQUEST CLICKSTREAM'
 				print str(CLICKSTREAM_ISSUE_REQUEST.to_json())
 				clickstream_response = api.post(CLICKSTREAM_ISSUE_REQUEST)
-				print 'THIS IS THE RESPONSE OF THE POST' + str(clickstream_response[0])
-				registered_clickstream_request = api.get(clickstream_response[0].to_json()["id"])
-				print 'THIS IS THE REGISTERED REQUEST ' + str(registered_clickstream_request[0])
+				print 'THIS IS THE RESPONSE OF THE CLICKSTREAM-POST: ' + str(clickstream_response)
+				print 'THIS IS THE RESPONSE OF THE CLICKSTREAM-POST: ' + str(clickstream_response[0])
+				print type(clickstream_response[0])
+				registered_clickstream_request = api.get(clickstream_response[0].to_json()["id"])[0]
+				print 'THIS IS THE REGISTERED CLICKSTREAM-REQUEST ' + str(registered_clickstream_request)
 		except Exception as e:
 			print 'THIS IS THE MESSAGE: '
 			print e.message
 			print 'THAT WAS THE MESSAGE: '
-			if int(e.message.split(' ')[0]) != 429 :
+			if int(e.message.split(' ')[0]) != 429:
 				exit_with_error = True
 				error_message += 'clickstream: ' + e.message
 				break
@@ -153,7 +160,7 @@ def issue_requests(config_json):
 		#wait for the necessary time
 		print registered_tables_request,registered_clickstream_request
 		if (registered_tables_request==None or registered_clickstream_request==None):
-			time.sleep(5)
+			time.sleep(60)
 
 	if exit_with_error :
 		print error_message
@@ -163,6 +170,7 @@ def issue_requests(config_json):
 
 
 def download_requests(tables_request, clickstream_request, config_json):
+	print 'ENTERING METHOD DOWNLOAD REQUEST'
 	downloaded_tables = False
 	downloaded_clickstream = False
 	exit_with_error = False
@@ -177,53 +185,54 @@ def download_requests(tables_request, clickstream_request, config_json):
 		
 		if not downloaded_tables:
 
-			if tables_registered_req == None:
+			try:
+				print type(tables_request)
+				print type(tables_request.to_json())
+				tables_registered_req = api.get(tables_request.to_json()['id'])
+			except Exception as e:
+				print e.message
+				exit_with_error = True
+				error_message += 'tables, at updating request'
+				break
+
+			if tables_registered_req[0].to_json()['status'] == 'SUCCESSFUL':
 				try:
-					tables_registered_req = api.get(tables_request.to_json()['id'])
+					# try to download the table request
+					table_file = utils.download(tables_registered_req[0],config_json['initial_download_location'])
+					downloaded_tables = True
+					
 				except Exception as e:
-					print e.message
 					exit_with_error = True
-					error_message += 'tables, at updating request'
+					error_message += 'tables'
 					break
 			else:
-				if tables_registered_req[0].to_json()['status'] == 'SUCCESSFUL':
-					try:
-						# try to download the table request
-						table_file = utils.download(tables_registered_req[0],config_json['initial_download_location'])
-						downloaded_tables = True
-						
-					except Exception as e:
-						exit_with_error = True
-						error_message += 'tables'
-						break
-				else:
-					print 'MUST WAIT FOR THE TABLES'
+				print 'MUST WAIT FOR THE TABLES'
 
 		if not downloaded_clickstream:
-			if clickstream_registered_req == None:
+			
+			try:
+				clickstream_registered_req = api.get(clickstream_request.to_json()['id'])
+			except:
+				exit_with_error = True
+				error_message += 'tables, at updating request'
+				break
+			print str(clickstream_registered_req)
+		
+			if clickstream_registered_req[0].to_json()['status'] == 'SUCCESSFUL':
 				try:
-					clickstream_registered_req = api.get(clickstream_request.to_json()['id'])
-				except:
+					# try to download the clickstream request
+					clickstream_files = utils.download(clickstream_registered_req[0],config_json['initial_download_location'])
+					downloaded_clickstream = True
+				except Exception as e:
 					exit_with_error = True
-					error_message += 'tables, at updating request'
+					error_message += 'clickstream, at downloading'
 					break
-				print str(clickstream_registered_req)
 			else:
-				if clickstream_registered_req[0].to_json()['status'] == 'SUCCESSFUL':
-					try:
-						# try to download the clickstream request
-						clickstream_files = utils.download(clickstream_registered_req[0],config_json['initial_download_location'])
-						downloaded_clickstream = True
-					except Exception as e:
-						exit_with_error = True
-						error_message += 'clickstream, at downloading'
-						break
-				else:
-					print 'MUST WAIT FOR THE CLICKSTREAM'
+				print 'MUST WAIT FOR THE CLICKSTREAM'
 
 		#wait for the necessary time
 		if (not downloaded_tables or not downloaded_clickstream):
-			time.sleep(5)
+			time.sleep(60)
 
 	if exit_with_error :
 		print error_message
