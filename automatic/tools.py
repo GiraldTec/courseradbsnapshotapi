@@ -247,10 +247,10 @@ def update_database_tables(tables_file, config_json):
 	try:
 		if config_json['first_time'] == 'yes':
 
-			command = './automatic_setup_and_load_tables.sh '+ tables_file[0].split('/')[-1] +  ' ' + config_json['table_export_location']
+			command = './automatic_setup_and_load_tables.sh '+ tables_file[0].split('/')[-1] +  ' ' + config_json['table_export_location'] + ' ' + config_json['database_name']
 			print command
 		else:
-			command = './automatic_setup_and_load_tables.sh '+ tables_file[0].split('/')[-1] +  ' ' + config_json['table_export_location']
+			command = './automatic_empty_and_load_tables.sh '+ tables_file[0].split('/')[-1] +  ' ' + config_json['table_export_location'] + ' ' + config_json['database_name']
 			print command	
 
 		os.system(command)
