@@ -1,13 +1,1 @@
-{
-"first_time":"yes",
-"table_export_location":"tables/",
-"clickstream_export_location":"events/",
-"initial_download_location":".",
-"fist_clickstream_date":"2018-10-01",
-"last_clickstream_date":"d",
-"purpose_for_requests":"For self study and analysis ",
-"tables_purpose":"of the tables data.",
-"clickstream_purpose":"of the clickstream data.",
-"eit_digital_id":"253"
-
-}
+{"first_time": "yes", "initial_download_location": ".", "table_export_location": "tables/", "last_clickstream_date": "", "fist_clickstream_date": "2018-07-01", "eit_digital_id": "253", "clickstream_purpose": "of the clickstream data.", "clickstream_export_location": "events/", "purpose_for_requests": "For self study and analysis ", "tables_purpose": "of the tables data."}

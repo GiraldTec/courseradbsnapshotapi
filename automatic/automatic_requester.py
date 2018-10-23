@@ -27,9 +27,9 @@ import sys
 
 import tools
 
-import logging
-logger = logging.getLogger()
-logger.disabled = True
+#import logging
+#logger = logging.getLogger()
+#logger.disabled = True
 
 
 if len(sys.argv) != 2:
@@ -40,26 +40,26 @@ CONFIG_JSON = tools.load_config_json(sys.argv[1])
 print CONFIG_JSON
 
 
-TABLES_REQUEST, CLICKSTREAM_REQUEST, CONFIG_JSON = tools.issue_requests(CONFIG_JSON)
+TABLES_REQUEST, CLICKSTREAM_REQUEST, RANGE_LAST = tools.issue_requests(CONFIG_JSON)
 
 #print 'THIS IS THE RESULTING TABLE REQUEST: '+str(TABLES_REQUEST.to_json()['id'])
 #print 'THIS IS THE RESULTING CLICKSTREAM REQUEST: '+str(CLICKSTREAM_REQUEST.to_json()['id'])
 
-TABLES_FILE, CLICKSTREAM_FILES, CONFIG_JSON = tools.download_requests(TABLES_REQUEST, CLICKSTREAM_REQUEST, CONFIG_JSON)
+#TABLES_FILE, CLICKSTREAM_FILES, CONFIG_JSON = tools.download_requests(TABLES_REQUEST, CLICKSTREAM_REQUEST, CONFIG_JSON)
 #print 'THIS IS THE RESULTING FILE WITH TABLES: ' + str(TABLES_FILE)
 #print 'THESE ARE THE RESULTING FILES OF EVENTS: ' + str(CLICKSTREAM_FILES)
 
 
 #TABLES_FILE = ['eitdigital_1539088965232.zip']
-CONFIG_JSON = tools.update_database_tables(TABLES_FILE, CONFIG_JSON)
+#CONFIG_JSON = tools.update_database_tables(TABLES_FILE, CONFIG_JSON)
 
 
 #CLICKSTREAM_FILES= [u'./access-2018-08-29.csv.gz', u'./video-2018-08-29.csv.gz', u'./access-2018-08-30.csv.gz', u'./video-2018-08-30.csv.gz', u'./access-2018-08-31.csv.gz', u'./video-2018-08-31.csv.gz', u'./access-2018-09-01.csv.gz', u'./video-2018-09-01.csv.gz', u'./access-2018-09-02.csv.gz', u'./video-2018-09-02.csv.gz', u'./access-2018-09-03.csv.gz', u'./video-2018-09-03.csv.gz', u'./access-2018-09-04.csv.gz', u'./video-2018-09-04.csv.gz', u'./access-2018-09-05.csv.gz', u'./video-2018-09-05.csv.gz', u'./access-2018-09-06.csv.gz', u'./video-2018-09-06.csv.gz', u'./access-2018-09-07.csv.gz', u'./video-2018-09-07.csv.gz', u'./access-2018-09-08.csv.gz', u'./video-2018-09-08.csv.gz', u'./access-2018-09-09.csv.gz', u'./video-2018-09-09.csv.gz', u'./access-2018-09-10.csv.gz', u'./video-2018-09-10.csv.gz', u'./access-2018-09-11.csv.gz', u'./video-2018-09-11.csv.gz', u'./access-2018-09-12.csv.gz', u'./video-2018-09-12.csv.gz', u'./access-2018-09-13.csv.gz', u'./video-2018-09-13.csv.gz', u'./access-2018-09-14.csv.gz', u'./video-2018-09-14.csv.gz', u'./access-2018-09-15.csv.gz', u'./video-2018-09-15.csv.gz', u'./access-2018-09-16.csv.gz', u'./video-2018-09-16.csv.gz', u'./access-2018-09-17.csv.gz', u'./video-2018-09-17.csv.gz', u'./access-2018-09-18.csv.gz', u'./video-2018-09-18.csv.gz', u'./access-2018-09-19.csv.gz', u'./video-2018-09-19.csv.gz', u'./access-2018-09-20.csv.gz', u'./video-2018-09-20.csv.gz', u'./access-2018-09-21.csv.gz', u'./video-2018-09-21.csv.gz', u'./access-2018-09-22.csv.gz', u'./video-2018-09-22.csv.gz', u'./access-2018-09-23.csv.gz', u'./video-2018-09-23.csv.gz', u'./access-2018-09-24.csv.gz', u'./video-2018-09-24.csv.gz', u'./access-2018-09-25.csv.gz', u'./video-2018-09-25.csv.gz', u'./access-2018-09-26.csv.gz', u'./video-2018-09-26.csv.gz', u'./access-2018-09-27.csv.gz', u'./video-2018-09-27.csv.gz', u'./access-2018-09-28.csv.gz', u'./video-2018-09-28.csv.gz', u'./access-2018-09-29.csv.gz', u'./video-2018-09-29.csv.gz', u'./access-2018-09-30.csv.gz', u'./video-2018-09-30.csv.gz', u'./access-2018-10-01.csv.gz', u'./video-2018-10-01.csv.gz', u'./access-2018-10-02.csv.gz', u'./video-2018-10-02.csv.gz', u'./access-2018-10-03.csv.gz', u'./video-2018-10-03.csv.gz', u'./access-2018-10-04.csv.gz', u'./video-2018-10-04.csv.gz', u'./access-2018-10-05.csv.gz', u'./video-2018-10-05.csv.gz', u'./access-2018-10-06.csv.gz', u'./video-2018-10-06.csv.gz', u'./access-2018-10-07.csv.gz', u'./video-2018-10-07.csv.gz', u'./access-2018-10-08.csv.gz', u'./video-2018-10-08.csv.gz']
 
 
-CONFIG_JSON = tools.update_database_clickstream(CLICKSTREAM_FILES, CONFIG_JSON)
+#CONFIG_JSON = tools.update_database_clickstream(CLICKSTREAM_FILES, CONFIG_JSON)
 
-#tools.update_jsonfile(CONFIG_JSON)
+tools.update_jsonfile(RANGE_LAST,sys.argv[1],CONFIG_JSON)
 
 '''
 STATE = 0

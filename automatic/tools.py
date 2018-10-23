@@ -166,7 +166,7 @@ def issue_requests(config_json):
 		print error_message
 		sys.exit()
 	else:
-		return registered_tables_request, registered_clickstream_request, config_json
+		return registered_tables_request, registered_clickstream_request, range_last
 
 
 def download_requests(tables_request, clickstream_request, config_json):
@@ -293,3 +293,12 @@ def update_database_clickstream(clickstream_files, config_json):
 	# config_json is updated?
 	return config_json
 
+
+def update_jsonfile(range_last, file_name, config_json):
+	print file_name
+	config_json['last_clickstream_date'] = range_last
+	config_json['first_time'] = 'no'
+	aux = open(file_name,'w+')
+	json.dump(config_json, aux)
+	#aux.write(str(config_json))
+	aux.close()
