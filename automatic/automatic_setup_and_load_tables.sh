@@ -1,3 +1,4 @@
+echo 'Hola'
 unzip $1 -d .
 psql -1 -f setup_tables_unique.sql
 psql -1 -f load.sql

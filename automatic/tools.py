@@ -245,8 +245,14 @@ def download_requests(tables_request, clickstream_request, config_json):
 def update_database_tables(tables_file, config_json):
 	print os.getcwd()
 	try:
-		command = './automatic_setup_and_load_tables.sh '+ tables_file[0].split('/')[-1] +  ' ' + config_json['table_export_location']
-		print command
+		if config_json['first_time'] == 'yes':
+
+			command = './automatic_setup_and_load_tables.sh '+ tables_file[0].split('/')[-1] +  ' ' + config_json['table_export_location']
+			print command
+		else:
+			command = './automatic_setup_and_load_tables.sh '+ tables_file[0].split('/')[-1] +  ' ' + config_json['table_export_location']
+			print command	
+
 		os.system(command)
 		# try to run the setup_and_load.sh
 	except Exception as e:
@@ -256,8 +262,8 @@ def update_database_tables(tables_file, config_json):
 	# config_json is updated?
 	return config_json
 
-def load_events(list_of_event_files):
-	conn = psycopg2.connect("dbname=sep-user user=sep-user")
+def load_events(list_of_event_files, db_name, db_user_name):
+	conn = psycopg2.connect("dbname="+db_name+" user="+db_user_name)
 	cur = conn.cursor()
 
 	for event_file in list_of_event_files:
@@ -274,7 +280,7 @@ def update_database_clickstream(clickstream_files, config_json):
 		# try to run the setup_and_load.sh
 		if config_json['first_time']=='yes':
 			print 'ITS THE FIRST TIME!'
-			command = './setup_events.sh'
+			command = './setup_events.sh '+config_json['database_name'] 
 			print command
 			os.system(command)
 			config_json['first_time']='no'
@@ -282,7 +288,7 @@ def update_database_clickstream(clickstream_files, config_json):
 
 			os.system('gunzip *.gz')
 			print clickstream_files
-			load_events(clickstream_files)
+			load_events(clickstream_files, config_json["database_name"],config_json["database_user"])
 			os.system('gzip *.csv')
 			os.system('mv *.gz '+ config_json['clickstream_export_location'])
 
@@ -297,7 +303,6 @@ def update_database_clickstream(clickstream_files, config_json):
 def update_jsonfile(range_last, file_name, config_json):
 	print file_name
 	config_json['last_clickstream_date'] = range_last
-	config_json['first_time'] = 'no'
 	aux = open(file_name,'w+')
 	json.dump(config_json, aux)
 	#aux.write(str(config_json))
