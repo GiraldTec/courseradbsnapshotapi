@@ -49,3 +49,5 @@ TABLES_FILE, CLICKSTREAM_FILES, CONFIG_JSON = tools.download_requests(TABLES_REQ
 
 #tools.update_jsonfile(RANGE_LAST,sys.argv[1],CONFIG_JSON)
 
+# to run the script that refreshes the materialized views
+# sudo -u www-data /srv/apps/coursera/venv/bin/python /srv/apps/coursera/code/manage.py refreshviews
