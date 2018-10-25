@@ -44,8 +44,8 @@ TABLES_REQUEST, CLICKSTREAM_REQUEST, RANGE_LAST = tools.issue_requests(CONFIG_JS
 
 TABLES_FILE, CLICKSTREAM_FILES, CONFIG_JSON = tools.download_requests(TABLES_REQUEST, CLICKSTREAM_REQUEST, CONFIG_JSON)
 
-#CONFIG_JSON = tools.update_database_tables(TABLES_FILE, CONFIG_JSON)
-#CONFIG_JSON = tools.update_database_clickstream(CLICKSTREAM_FILES, CONFIG_JSON)
+CONFIG_JSON = tools.update_database_tables(TABLES_FILE, CONFIG_JSON)
+CONFIG_JSON = tools.update_database_clickstream(CLICKSTREAM_FILES, CONFIG_JSON)
 
 tools.update_jsonfile(RANGE_LAST,sys.argv[1],CONFIG_JSON)
 
