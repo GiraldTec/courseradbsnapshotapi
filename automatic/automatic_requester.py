@@ -24,7 +24,7 @@ from datetime import date, datetime, timedelta
 
 import time
 import sys
-
+import os
 import tools
 
 #import logging
@@ -51,3 +51,5 @@ tools.update_jsonfile(RANGE_LAST,sys.argv[1],CONFIG_JSON)
 
 # to run the script that refreshes the materialized views
 # sudo -u www-data /srv/apps/coursera/venv/bin/python /srv/apps/coursera/code/manage.py refreshviews
+# Only works in the server with the analytics API installed
+# os.system('sudo -u www-data /srv/apps/coursera/venv/bin/python /srv/apps/coursera/code/manage.py refreshviews')

@@ -75,17 +75,7 @@ def get_from_todays(tab_req, click_req):
 	return_clickstream_req = get_clickstream_request(today_requests, click_req)	
 
 	return return_tab_req, return_clickstream_req
-'''
-def get_latest_table_request():
-	print "ENTERING METHOD: get_latest_table_request"
-	today_requests = get_today_requests()
-	latest = None
-	for r in today_requests:
-		if r.to_json()['exportType'] == 'RESEARCH_WITH_SCHEMAS':
-			latest = r
-			break
-	return latest
-'''
+
 
 def issue_requests(config_json):
 
@@ -124,10 +114,7 @@ def issue_requests(config_json):
 			print 'THAT WAS THE MESSAGE'
 			if int(str(e.message.split(' ')[0])) != 429 :
 				#time to wait
-				#print e.message
-				#print 'TIME TO WAIT for the latest request! ' + str(datetime.fromtimestamp(get_latest_table_request().to_json()['metadata']['startedAt']/ 1e3))
-				#print 'MIGHT NEED TO WAIT UNTIL: ' + str(datetime.fromtimestamp(get_latest_table_request().to_json()['metadata']['startedAt']/ 1e3) + timedelta(hours=1))
-				#print 'ONLY ' + str((datetime.fromtimestamp(get_latest_table_request().to_json()['metadata']['startedAt']/ 1e3) + timedelta(hours=1) - datetime.today()).seconds)
+				
 				exit_with_error = True
 				error_message += 'tables: ' + e.message
 				break
