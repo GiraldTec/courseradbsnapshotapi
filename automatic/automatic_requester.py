@@ -1,25 +1,3 @@
-
-
-# It will wait until 3 am, just to be sure
-
-# issue the requests, 
-
-# success: memorize the id of the 2 requests
-
-# Failure: log the wrong behaviour
-# a missing request - try again every 10 minutes maximum until 10 times, then stop
-
-
-
-# Check periodically untill those requests are all successful
-
-# download the files,
-# success: memorize the names of the files and update the table with the latest interval
-# Failure: log the wrong behaviour and stop and delete all the downloaded documents
-
-
-# Update database 
-
 from datetime import date, datetime, timedelta
 
 import time
